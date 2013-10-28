@@ -95,6 +95,8 @@ instance YesodAuth MyAuthSite where
 
     authHttpManager = httpManager
 
+    maybeAuthId = lookupSession "_ID"
+
 instance RenderMessage MyAuthSite FormMessage where
     renderMessage _ _ = defaultFormMessage
 
