@@ -89,16 +89,18 @@ instance YesodAuth MyAuthSite where
     logoutDest _ = RootR
 
     authPlugins _ =
-        [ authBrowserId
+        [ authBrowserId def
         , authGoogleEmail
         ]
 
     authHttpManager = httpManager
 
+    maybeAuthId = lookupSession "_ID"
+
 instance RenderMessage MyAuthSite FormMessage where
     renderMessage _ _ = defaultFormMessage
 
-getRootR :: Handler RepHtml
+getRootR :: Handler Html
 getRootR = do
     maid &lt;- maybeAuthId
     defaultLayout [whamlet|
@@ -114,7 +116,7 @@ $nothing
 main :: IO ()
 main = do
     man &lt;- newManager def
-    warpDebug 3000 $ MyAuthSite man</programlisting>
+    warp 3000 $ MyAuthSite man</programlisting>
     <para>We'll start with the route declarations. First we declare our standard <literal>RootR</literal>
    route, and then we set up the authentication subsite. Remember that a subsite needs four
    parameters: the path to the subsite, the route name, the subsite name, and a function to get the
